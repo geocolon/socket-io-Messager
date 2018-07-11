@@ -20,7 +20,7 @@
                 <h1 class="text-center">
                     MongoChat
                     <button id="clear" class="btn btn-danger">Clear</button>
-                    <div class="class status"></div>
+                    <div id="status"></div>
                     <div id="chat">
                         <input type="text" class="form-control" placeholder="Enter name...">
                         <br>
@@ -46,6 +46,34 @@
 
             // GET Elements
             let status = element('status');
+            let messages = element('messages');
+            let textarea = element('textarea');
+            let username = element('username');
+            let clearBtn = element('clear');
+
+            // Se default state
+            let statusDefault = status.textContent;
+
+            let setStatus = function(s){
+                // Set status
+                status.textContent = s;
+                if(s !== statusDefault){
+                    let delay = setTimout(function(){
+                        setStatus(statusDefault);
+                    }, 4000);
+                }
+            }
+
+            // Connect to socket.io
+            let socket = io.connect('http://localhost:27017:4000');
+
+            // Check for connection
+            if(socket !== undefined){
+                console.log('Connected to socket...');
+                socket.on('output', function(data){
+                    console.log(data);
+                });
+            }
 
        })(); 
     </script>

@@ -1,12 +1,12 @@
 'use strict';
 /* global socket, sendStatus */
 
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require('mongodb').MongoClient, assert = require('assert');
 const client = require('socket.io').listen(4000).sockets;
-// console.log('This is MongoClient in action...: ',MongoClient);
+// console.log('This is MongoClie nt in action...: ',MongoClient);
 // Connect to mongo
-MongoClient.connect('mongodb://localhost:27017/mongochat',{useNewUrlParser: true }, function(err, db) {
-  
+MongoClient.connect('mongodb://localhost:27017/mongochat', {useNewUrlParser: true }, function(err, db) {
+  assert.equal(null, err);
   if(err){
     throw err;
   }
@@ -15,7 +15,7 @@ MongoClient.connect('mongodb://localhost:27017/mongochat',{useNewUrlParser: true
   // Connect to Socket.io
   console.log('MongoDB ONLINE...');
   client.on('connection', function(socket){
-    let chat = db.collection('chats');
+    const chat = db.collection('chats');
 
     // Create function to send status
     let sendStatus = function(s){
@@ -56,6 +56,7 @@ MongoClient.connect('mongodb://localhost:27017/mongochat',{useNewUrlParser: true
 
       // Handle clear
       socket.on('clear', function(data){
+        console.log('Passing data: ',data);
         // Remove all chats from collection
         chat.remove({}, function(){
         // Emit cleared
@@ -67,5 +68,5 @@ MongoClient.connect('mongodb://localhost:27017/mongochat',{useNewUrlParser: true
     });
   });
 
-
+  db.close();
 });
