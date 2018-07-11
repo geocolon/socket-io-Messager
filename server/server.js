@@ -1,9 +1,9 @@
 'use strict';
-/* global socket, sendStatus */
+/* global */
 
 const MongoClient = require('mongodb').MongoClient, assert = require('assert');
 const client = require('socket.io').listen(4000).sockets;
-// console.log('This is MongoClie nt in action...: ',MongoClient);
+// console.log('This is MongoClient in action...: ',MongoClient);
 // Connect to mongo
 MongoClient.connect('mongodb://localhost:27017/mongochat', {useNewUrlParser: true }, function(err, db) {
   assert.equal(null, err);
@@ -31,9 +31,9 @@ MongoClient.connect('mongodb://localhost:27017/mongochat', {useNewUrlParser: tru
       socket.emit('output', res);
 
       // Handle input events
-      socket.on('input', function(date){
-        let name = data.name;
-        let message = data.message;
+      socket.on('input', function(data){
+        const name = data.name;
+        const message = data.message;
 
         // Check for name and message
         if(name === '' || message === '') {

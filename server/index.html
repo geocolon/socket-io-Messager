@@ -58,7 +58,7 @@
                 // Set status
                 status.textContent = s;
                 if(s !== statusDefault){
-                    let delay = setTimout(function(){
+                    let delay = setTimeout(function(){
                         setStatus(statusDefault);
                     }, 4000);
                 }
@@ -70,9 +70,34 @@
             // Check for connection
             if(socket !== undefined){
                 console.log('Connected to socket...');
+
+                // Handle output
                 socket.on('output', function(data){
-                    console.log(data);
+                    // console.log(data);
+                    if(data.length){
+                        for(let x = 0; x < data.length; x++){
+                            let message = document.createElement('div');
+                            message.setAttribute('class', 'chat-message');
+                            message.textContent = data[x].name+": "+data
+                            [x].message;
+                            messages.appendChild(message);
+                            messages.insertBefore(message,
+                            messages.firstChild);
+                        }
+                    }
                 });
+
+                socket.on('status', function(data){
+                    
+                    setStatus((typeof data === 'object')? data.message : data);
+
+                    // If status is clear, clear text
+                    if(data.clear){
+                        textarea.value = '';
+                    }
+                });
+
+                // Handle Input
             }
 
        })(); 
